@@ -32,7 +32,7 @@ public class MainMenu : MonoBehaviour
             {
                 Debug.Log(blinkingObject.name);
                 delChoosedTrack(blinkingObject.name);
-                SceneManager.LoadScene(1);
+                SceneManager.LoadScene(blinkingObject.name);
             }
         }
     }

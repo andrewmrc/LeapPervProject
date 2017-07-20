@@ -34,6 +34,7 @@ public class MatchSelector : MonoBehaviour
             }
             else
             {
+                //Destroy(arrayChild[i]);
                 arrayChild[i].gameObject.SetActive(false);
             }
         }
