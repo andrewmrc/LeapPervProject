@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 909c77cff39a85549b9abc728dbd1890
-timeCreated: 1500629374
+guid: 4f0b20c5b4ea4504288bd612de5f3344
+timeCreated: 1500897232
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -9,7 +9,7 @@ ModelImporter:
     400000: //RootNode
     2300000: //RootNode
     3300000: //RootNode
-    4300000: Penis
+    4300000: Handcuff
     9500000: //RootNode
   materials:
     importMaterials: 1
