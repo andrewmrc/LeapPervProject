@@ -25,7 +25,6 @@ public class MatchSelector : MonoBehaviour
             if (_name == arrayChild[i].gameObject.name)
             {
                 // Spengo l'animazione e spengo lo script LeapButton
-                Debug.Log("Sono nel Circuit giusto poiché sono " + arrayChild[i].name);
                 arrayChild[i].GetComponent<LeapButton>().anim.SetBool("On", false);
                 arrayChild[i].GetComponent<LeapButton>().enabled = false;
                 // Attivo il tracciato al suo interno su cui giocherá il Player nella PlayScene
@@ -34,7 +33,6 @@ public class MatchSelector : MonoBehaviour
             }
             else
             {
-                //Destroy(arrayChild[i]);
                 arrayChild[i].gameObject.SetActive(false);
             }
         }
@@ -46,7 +44,6 @@ public class MatchSelector : MonoBehaviour
         {
             if (_name == arrayChild[i].gameObject.name)
             {
-                Debug.Log("Sono nel Circuit giusto poiché sono " + arrayChild[i].name);
                 DontDestroyOnLoad(this.gameObject);
                 arrayChild[i].gameObject.SetActive(true);
             }

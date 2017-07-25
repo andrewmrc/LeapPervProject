@@ -1,44 +1,48 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class MovePlayer : MonoBehaviour
 {
-    public KeyCode moveR, moveL;
-    private Rigidbody rb;
     public bool isMovingLane = false;
     public int numLane = 0;
-    //public float velHoriz = 0f;
     public float speed;
-    private Vector3 myPosition;
+    private float x0, x1, x2, xless1, xless2;
 
-    public Transform lane_0, lane_1, lane_2, lane_less_1, lane_less_2;
-    public float x0, x1, x2, xless1, xless2;
+    private SoundManager refSM;
+    private Rigidbody rb;
+
+    public KeyCode moveR, moveL;
+
+    public Action<int> delCurrentLane;
 
     private void Start()
     {
+        refSM = FindObjectOfType<SoundManager>();
         rb = GetComponent<Rigidbody>();
-        x0 = lane_0.localPosition.x;
-        x1 = lane_1.localPosition.x;
-        x2 = lane_2.localPosition.x;
-        xless1 = lane_less_1.localPosition.x;
-        xless2 = lane_less_2.localPosition.x;
+        x0 = refSM.lane_0.localPosition.x;
+        x1 = refSM.lane_1.localPosition.x;
+        x2 = refSM.lane_2.localPosition.x;
+        xless1 = refSM.lane_less_1.localPosition.x;
+        xless2 = refSM.lane_less_2.localPosition.x;
     }
 
     private void Update()
-    {
-       
+    {     
         rb.velocity = this.transform.forward + new Vector3(0, 0, -speed);
 
         if (Input.GetKeyDown(moveL) && !isMovingLane && numLane > -2)
         {
             numLane--;
+            delCurrentLane(numLane);
             ChangeLane(numLane);
         }
 
         if (Input.GetKeyDown(moveR) && !isMovingLane && numLane < 2)
         {
             numLane++;
+            delCurrentLane(numLane);
             ChangeLane(numLane);
         }
     }
