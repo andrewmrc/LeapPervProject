@@ -7,8 +7,8 @@ public class SoundManager : MonoBehaviour
     private MovePlayer refMP;
     public Transform lane_0, lane_1, lane_2, lane_less_1, lane_less_2;
     public AudioClip[] audioClipArray;
-    [SerializeField]
-    private Transform[] laneArray = new Transform[4];
+    public Transform[] laneArray = new Transform[4];
+    public AudioSource audioSoundManager;
 
     public int currIndexAudioClipArray;
 
@@ -16,6 +16,8 @@ public class SoundManager : MonoBehaviour
     {
         refMP = FindObjectOfType<MovePlayer>();
         refMP.delCurrentLane = PlaySingleTrack;
+        audioSoundManager = GetComponent<AudioSource>();
+
         laneArray[0] = lane_1;
         laneArray[1] = lane_2;
         laneArray[2] = lane_less_1;
@@ -77,11 +79,6 @@ public class SoundManager : MonoBehaviour
     {
         _lane.GetComponent<AudioSource>().volume = 1;
         yield return null;
-        //while (_lane.GetComponent<AudioSource>().volume != 1)
-        //{
-        //    yield return null;
-        //    _lane.GetComponent<AudioSource>().volume += .1f;
-        //}
     }
 
     private IEnumerator DecreaseVolumeCO(Transform _lane)
@@ -105,9 +102,7 @@ public class SoundManager : MonoBehaviour
             }
             currIndexAudioClipArray++;
         }
-        Debug.Log(currIndexAudioClipArray);
     }
-
 
     private IEnumerator ChangeAudioClipCO()
     {

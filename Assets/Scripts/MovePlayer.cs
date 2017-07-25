@@ -17,6 +17,7 @@ public class MovePlayer : MonoBehaviour
     public KeyCode moveR, moveL;
 
     public Action<int> delCurrentLane;
+    public Action<bool> delGameOver;
 
     private void Start()
     {
@@ -90,6 +91,14 @@ public class MovePlayer : MonoBehaviour
     {
         yield return new WaitForSeconds(.1f);
         anim.SetBool(_bool, false);
-
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Obstacle")
+        {
+            delGameOver(true);
+        }
+    }
+
 }
