@@ -9,8 +9,8 @@ public class MovePlayer : MonoBehaviour
     public int numLane = 0;
     public float speed;
     private float x0, x1, x2, xless1, xless2;
-
-    private SoundManager refSM;
+    private GameManager refGM;
+    //private SoundManager refSM;
     private Rigidbody rb;
     private Animator anim;
 
@@ -18,22 +18,23 @@ public class MovePlayer : MonoBehaviour
 
     public Action<int> delCurrentLane;
     public Action<bool> delGameOver;
+    public Action<bool> delFinishLevel;
 
     private void Start()
     {
-        refSM = FindObjectOfType<SoundManager>();
+        refGM = FindObjectOfType<GameManager>();
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
-        x0 = refSM.lane_0.localPosition.x;
-        x1 = refSM.lane_1.localPosition.x;
-        x2 = refSM.lane_2.localPosition.x;
-        xless1 = refSM.lane_less_1.localPosition.x;
-        xless2 = refSM.lane_less_2.localPosition.x;
+        x0 = refGM.lane_0.localPosition.x;
+        x1 = refGM.lane_1.localPosition.x;
+        x2 = refGM.lane_2.localPosition.x;
+        xless1 = refGM.lane_less_1.localPosition.x;
+        xless2 = refGM.lane_less_2.localPosition.x;
     }
 
     private void Update()
-    {     
-        rb.velocity = this.transform.forward + new Vector3(0, 0, -speed);
+    {
+        transform.Translate(this.transform.forward * (-speed) * Time.deltaTime);
 
         if (Input.GetKeyDown(moveL) && !isMovingLane && numLane > -2)
         {
@@ -98,6 +99,11 @@ public class MovePlayer : MonoBehaviour
         if (collision.gameObject.tag == "Obstacle")
         {
             delGameOver(true);
+        }
+
+        else if (collision.gameObject.name == "EndTrack")
+        {
+            delFinishLevel(true);
         }
     }
 

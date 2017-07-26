@@ -5,7 +5,7 @@ using UnityEngine;
 public class SoundManager : MonoBehaviour
 {
     private MovePlayer refMP;
-    public Transform lane_0, lane_1, lane_2, lane_less_1, lane_less_2;
+    private GameManager refGM;
     public AudioClip[] audioClipArray;
     public Transform[] laneArray = new Transform[4];
     public AudioSource audioSoundManager;
@@ -15,16 +15,16 @@ public class SoundManager : MonoBehaviour
     private void Awake()
     {
         refMP = FindObjectOfType<MovePlayer>();
+        refGM = FindObjectOfType<GameManager>();
         refMP.delCurrentLane = PlaySingleTrack;
         audioSoundManager = GetComponent<AudioSource>();
 
-        laneArray[0] = lane_1;
-        laneArray[1] = lane_2;
-        laneArray[2] = lane_less_1;
-        laneArray[3] = lane_less_2;
+        laneArray[0] = refGM.lane_1;
+        laneArray[1] = refGM.lane_2;
+        laneArray[2] = refGM.lane_less_1;
+        laneArray[3] = refGM.lane_less_2;
 
         SetAudioClip();
-        StartCoroutine(ChangeAudioClipCO());
     }
 
     private void PlaySingleTrack(int _numLane)
@@ -32,7 +32,7 @@ public class SoundManager : MonoBehaviour
         switch (_numLane)
         {
             case 0:
-                StartCoroutine(IncreaseVolumeCO(lane_0));
+                StartCoroutine(IncreaseVolumeCO(refGM.lane_0));
 
                 //StartCoroutine(DecreaseVolumeCO(lane_1));
                 //StartCoroutine(DecreaseVolumeCO(lane_2));
@@ -40,7 +40,7 @@ public class SoundManager : MonoBehaviour
                 //StartCoroutine(DecreaseVolumeCO(lane_less_2));
                 break;
             case 1:
-                StartCoroutine(IncreaseVolumeCO(lane_1));
+                StartCoroutine(IncreaseVolumeCO(refGM.lane_1));
 
                 //StartCoroutine(DecreaseVolumeCO(lane_0));
                 //StartCoroutine(DecreaseVolumeCO(lane_2));
@@ -48,7 +48,7 @@ public class SoundManager : MonoBehaviour
                 //StartCoroutine(DecreaseVolumeCO(lane_less_2));
                 break;
             case 2:
-                StartCoroutine(IncreaseVolumeCO(lane_2));
+                StartCoroutine(IncreaseVolumeCO(refGM.lane_2));
 
                 //StartCoroutine(DecreaseVolumeCO(lane_1));
                 //StartCoroutine(DecreaseVolumeCO(lane_0));
@@ -56,7 +56,7 @@ public class SoundManager : MonoBehaviour
                 //StartCoroutine(DecreaseVolumeCO(lane_less_2));
                 break;
             case -1:
-                StartCoroutine(IncreaseVolumeCO(lane_less_1));
+                StartCoroutine(IncreaseVolumeCO(refGM.lane_less_1));
 
                 //StartCoroutine(DecreaseVolumeCO(lane_1));
                 //StartCoroutine(DecreaseVolumeCO(lane_2));
@@ -65,7 +65,7 @@ public class SoundManager : MonoBehaviour
 
                 break;
             case -2:
-                StartCoroutine(IncreaseVolumeCO(lane_less_2));
+                StartCoroutine(IncreaseVolumeCO(refGM.lane_less_2));
 
                 //StartCoroutine(DecreaseVolumeCO(lane_1));
                 //StartCoroutine(DecreaseVolumeCO(lane_2));
@@ -91,7 +91,7 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    private void SetAudioClip()
+    public void SetAudioClip()
     {
         foreach (var lane in laneArray)
         {

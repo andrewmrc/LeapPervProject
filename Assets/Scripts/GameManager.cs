@@ -7,13 +7,22 @@ public class GameManager : MonoBehaviour
 {
     private MovePlayer refMP;
     private SoundManager refSM;
-    public GameObject panelGameOver;
+    public GameObject panelGameOver, panelFinishedLevel;
+    public Transform lane_0, lane_1, lane_2, lane_less_1, lane_less_2;
 
     private void Start()
     {
         refMP = FindObjectOfType<MovePlayer>();
         refSM = FindObjectOfType<SoundManager>();
         refMP.delGameOver = GameOver;
+        refMP.delFinishLevel = FinishedLevel;
+    }
+
+    private void FinishedLevel(bool _on)
+    {
+        Time.timeScale = 0;
+        panelFinishedLevel.SetActive(_on);
+        panelFinishedLevel.GetComponent<AudioSource>().Play();
     }
 
     private void GameOver(bool _on)
@@ -25,13 +34,19 @@ public class GameManager : MonoBehaviour
             refSM.laneArray[i].GetComponent<AudioSource>().Stop();
         }
 
-        refSM.audioSoundManager.Play();
         panelGameOver.SetActive(_on);
+        panelGameOver.GetComponent<AudioSource>().Play();
     }
 
     public void Restart()
     {
         SceneManager.LoadScene("Circuit 1");
+        Time.timeScale = 1;
+    }
+
+    public void ReturnToMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
         Time.timeScale = 1;
     }
 }
