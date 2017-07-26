@@ -21,6 +21,12 @@ public class GameManager : MonoBehaviour
     private void FinishedLevel(bool _on)
     {
         Time.timeScale = 0;
+
+        for (int i = 0; i < refSM.laneArray.Length; i++)
+        {
+            refSM.laneArray[i].GetComponent<AudioSource>().Stop();
+        }
+
         panelFinishedLevel.SetActive(_on);
         panelFinishedLevel.GetComponent<AudioSource>().Play();
     }
