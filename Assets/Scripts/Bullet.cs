@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
+    public byte speedBullet;
     private void Awake()
     {
         StartCoroutine(DestroyByTimeCO());
@@ -11,7 +12,7 @@ public class Bullet : MonoBehaviour
 
     private void Update ()
     {
-        this.transform.Translate(this.transform.forward * (-30) * Time.deltaTime);
+        this.transform.Translate(this.transform.forward * (-speedBullet) * Time.deltaTime);
     }
 
     private IEnumerator DestroyByTimeCO()
