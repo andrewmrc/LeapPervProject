@@ -12,17 +12,20 @@ public class GameManager : MonoBehaviour
     public Text scoreGO, scoreFL;
     public Transform lane_0, lane_1, lane_2, lane_less_1, lane_less_2;
 
+
     public GameObject scorePoint;
-    public float currentScore;
+    public TextMesh textScorePlayer;
+    public int currentScore;
 
     // Assign delegates to their methods
-    private void Start()
+    private void Awake()
     {
         refMP = FindObjectOfType<MovePlayer>();
         refSM = FindObjectOfType<SoundManager>();
         refMP.delGameOver = GameOver;
         refMP.delFinishLevel = FinishedLevel;
-
+        refMP.delCondom = Condom;
+        refMP.delBat = Bat;
         StartCoroutine(DistanceScore());
     }
 
@@ -59,6 +62,46 @@ public class GameManager : MonoBehaviour
         panelGameOver.GetComponent<AudioSource>().Play();
     }
 
+    // Called when take a Condom, change score of value passed by delegate
+    private void Condom(int _value, string _name)
+    {
+        switch (_name)
+        {
+            case "Penis":
+                currentScore += _value;
+                StartCoroutine(FeedbackBonus(_value));
+                break;
+            case "Vagina":
+                currentScore -= _value;
+                StartCoroutine(FeedbackMalus(_value));
+                break;
+            case "Ass":
+                currentScore -= _value;
+                StartCoroutine(FeedbackMalus(_value));
+                break;
+        }
+    }
+
+    // Called when take a Bat, change score of value passed by delegate
+    private void Bat(int _value, string _name)
+    {
+        switch (_name)
+        {
+            case "Penis":
+                currentScore -= _value;
+                StartCoroutine(FeedbackMalus(_value));
+                break;
+            case "Vagina":
+                currentScore -= _value;
+                StartCoroutine(FeedbackMalus(_value));
+                break;
+            case "Ass":
+                currentScore -= _value;
+                StartCoroutine(FeedbackMalus(_value));
+                break;
+        }
+    }
+
     // Method called by button for restart scene
     public void Restart()
     {
@@ -73,16 +116,57 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1;
     }
 
-    // Increment score and set it to text in 2 panel of Game Over and Finished Level
+    // Increment score based to distance of the player and 
+    //set it to text in 2 panel of Game Over and Finished Level
     private IEnumerator DistanceScore()
     {
         while (Time.timeScale == 1)
         {
-            currentScore += 15;
             scoreGO.text = "Your score: " + currentScore.ToString();
             scoreFL.text = "Your final score: " + currentScore.ToString();
             yield return new WaitForSecondsRealtime(.1f);
-            yield return null;
+            currentScore += (int)refMP.transform.position.z * -1;
         }
     }
+
+    // Show green plus score feedback
+    private IEnumerator FeedbackBonus(float _value)
+    {
+        textScorePlayer.gameObject.SetActive(true);
+        textScorePlayer.color = Color.green;
+
+        Vector3 initialPos = textScorePlayer.transform.position;
+
+        while (textScorePlayer.transform.position.y <= 25f)
+        {
+            textScorePlayer.transform.position += new Vector3(0f, .5f, 0f);
+            textScorePlayer.text = "+ " + _value.ToString();
+            //textScorePlayer.GetComponent<TextMesh>().color.a += 0.4 * Time.deltaTime; ;
+            yield return null;
+        }
+
+        textScorePlayer.gameObject.SetActive(false);
+        textScorePlayer.transform.position = initialPos;
+    }
+
+    // Show red minus score feedback
+    private IEnumerator FeedbackMalus(float _value)
+    {
+        textScorePlayer.gameObject.SetActive(true);
+        textScorePlayer.color = Color.red;
+
+        Vector3 initialPos = textScorePlayer.transform.position;
+
+        while (textScorePlayer.transform.position.y <= 25f)
+        {
+            textScorePlayer.transform.position += new Vector3(0f, .5f, 0f);
+            textScorePlayer.text = "- " + _value.ToString();
+            //textScorePlayer.GetComponent<TextMesh>().color.a += 0.4 * Time.deltaTime; ;
+            yield return null;
+        }
+
+        textScorePlayer.gameObject.SetActive(false);
+        textScorePlayer.transform.position = initialPos;
+    }
+
 }

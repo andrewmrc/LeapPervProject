@@ -19,5 +19,15 @@ public class Bullet : MonoBehaviour
     {
         yield return new WaitForSeconds(2f);
         Destroy(this.gameObject);
+        print("Distrutto bullet");
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Obstacle")
+        {
+            Destroy(gameObject);
+            print("Distrutto bullet");
+        }
     }
 }

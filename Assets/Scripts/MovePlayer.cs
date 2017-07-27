@@ -17,6 +17,8 @@ public class MovePlayer : MonoBehaviour
     public KeyCode moveR, moveL;
 
     public Action<int> delCurrentLane;
+    public Action<int, string> delCondom;
+    public Action<int, string> delBat;
     public Action<bool> delGameOver;
     public Action<bool> delFinishLevel;
 
@@ -108,12 +110,27 @@ public class MovePlayer : MonoBehaviour
         if (collision.gameObject.tag == "Obstacle")
         {
             delGameOver(true);
+            Debug.Log("Delegato GameOver");
         }
 
-        else if (collision.gameObject.name == "EndTrack")
+        if (collision.gameObject.name == "EndTrack")
         {
             delFinishLevel(true);
+            Debug.Log("Delegato Finish Level");
+        }
+
+        if (collision.gameObject.name == "Condom")
+        {
+            delCondom(250, this.gameObject.name);
+            Destroy(collision.gameObject);
+            Debug.Log("Delegato Condom");
+        }
+
+        if (collision.gameObject.name == "Bat")
+        {
+            delBat(500, this.gameObject.name);
+            Destroy(collision.gameObject);
+            Debug.Log("Delegato Condom");
         }
     }
-
 }
