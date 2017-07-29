@@ -11,22 +11,16 @@ public class MovePlayer : MonoBehaviour
     public byte velTurn;
     private float x0, x1, x2, xless1, xless2;
     private GameManager refGM;
-    private Rigidbody rb;
     private Animator anim;
 
     public KeyCode moveR, moveL;
 
     public Action<int> delCurrentLane;
-    public Action<int, string> delCondom;
-    public Action<int, string> delBat;
-    public Action<bool> delGameOver;
-    public Action<bool> delFinishLevel;
-
+   
     private void Start()
     {
         refGM = FindObjectOfType<GameManager>();
         anim = GetComponent<Animator>();
-        rb = GetComponent<Rigidbody>();
 
         // Take x values from the public transform in Game Manager
         x0 = refGM.lane_0.localPosition.x;
@@ -62,7 +56,7 @@ public class MovePlayer : MonoBehaviour
         }
     }
 
-    // Method called for switch lane
+    // Method called for switch lane that call a coroutine
     private void ChangeLane(int _numLane)
     {
         switch (_numLane)
@@ -103,34 +97,5 @@ public class MovePlayer : MonoBehaviour
     {
         yield return null;
         anim.SetBool(_bool, false);
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.tag == "Obstacle")
-        {
-            delGameOver(true);
-            Debug.Log("Delegato GameOver");
-        }
-
-        if (collision.gameObject.name == "EndTrack")
-        {
-            delFinishLevel(true);
-            Debug.Log("Delegato Finish Level");
-        }
-
-        if (collision.gameObject.name == "Condom")
-        {
-            delCondom(250, this.gameObject.name);
-            Destroy(collision.gameObject);
-            Debug.Log("Delegato Condom");
-        }
-
-        if (collision.gameObject.name == "Bat")
-        {
-            delBat(500, this.gameObject.name);
-            Destroy(collision.gameObject);
-            Debug.Log("Delegato Condom");
-        }
     }
 }

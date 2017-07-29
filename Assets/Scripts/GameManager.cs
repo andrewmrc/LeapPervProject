@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     private MovePlayer refMP;
+    private CollisionPlayer refCP;
     private SoundManager refSM;
     public GameObject panelGameOver, panelFinishedLevel;
     public Text scoreGO, scoreFL;
@@ -22,10 +23,14 @@ public class GameManager : MonoBehaviour
     {
         refMP = FindObjectOfType<MovePlayer>();
         refSM = FindObjectOfType<SoundManager>();
-        refMP.delGameOver = GameOver;
-        refMP.delFinishLevel = FinishedLevel;
-        refMP.delCondom = Condom;
-        refMP.delBat = Bat;
+        refCP = FindObjectOfType<CollisionPlayer>();
+        refCP.delGameOver = GameOver;
+        refCP.delFinishLevel = FinishedLevel;
+        refCP.delCondom = Condom;
+        refCP.delBat = Bat;
+        refCP.delHandcuff = Handcuff;
+        refCP.delMouth = Mouth;
+        refCP.delMuzzle = Muzzle;
         StartCoroutine(DistanceScore());
     }
 
@@ -33,6 +38,76 @@ public class GameManager : MonoBehaviour
     {
         scorePoint.GetComponentInChildren<Text>().text = currentScore.ToString();
     }
+
+
+    // Method called by button for restart scene
+    public void Restart()
+    {
+        SceneManager.LoadScene("Circuit 1");
+        Time.timeScale = 1;
+    }
+
+    // Method called to return in main menu
+    public void ReturnToMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+        Time.timeScale = 1;
+    }
+
+    // Increment score based to distance of the player and 
+    //set it to text in 2 panel of Game Over and Finished Level
+    private IEnumerator DistanceScore()
+    {
+        while (Time.timeScale == 1)
+        {
+            currentScore += ((int)refMP.transform.position.z * -1) * (int)refMP.speed;
+            scoreGO.text = "Your score: " + currentScore.ToString();
+            scoreFL.text = "Your final score: " + currentScore.ToString();
+            yield return new WaitForSecondsRealtime(.1f);
+        }
+    }
+
+    // Show green plus score feedback
+    private IEnumerator FeedbackBonusCO(float _value)
+    {
+        textScorePlayer.gameObject.SetActive(true);
+        textScorePlayer.color = Color.green;
+
+        float initialY = textScorePlayer.transform.position.y;
+
+        while (textScorePlayer.transform.position.y <= 25f)
+        {
+            textScorePlayer.transform.position += new Vector3(0f, .5f, 0f);
+            textScorePlayer.text = "+ " + _value.ToString();
+            //textScorePlayer.GetComponent<TextMesh>().color.a += 0.4 * Time.deltaTime; ;
+            yield return null;
+        }
+
+        textScorePlayer.gameObject.SetActive(false);
+        textScorePlayer.transform.position = new Vector3(textScorePlayer.transform.position.x, initialY, textScorePlayer.transform.position.z);
+    }
+
+    // Show red minus score feedback
+    private IEnumerator FeedbackMalusCO(float _value)
+    {
+        textScorePlayer.gameObject.SetActive(true);
+        textScorePlayer.color = Color.red;
+
+        float initialY = textScorePlayer.transform.position.y;
+
+        while (textScorePlayer.transform.position.y <= 25f)
+        {
+            textScorePlayer.transform.position += new Vector3(0f, .5f, 0f);
+            textScorePlayer.text = "- " + _value.ToString();
+            //textScorePlayer.GetComponent<TextMesh>().color.a += 0.4 * Time.deltaTime; ;
+            yield return null;
+        }
+
+        textScorePlayer.gameObject.SetActive(false);
+        textScorePlayer.transform.position = new Vector3(textScorePlayer.transform.position.x, initialY, textScorePlayer.transform.position.z);
+    }
+
+#region DelegatesMethods
 
     // Stop all music, active panel Finish Level and play sound
     private void FinishedLevel(bool _on)
@@ -69,15 +144,15 @@ public class GameManager : MonoBehaviour
         {
             case "Penis":
                 currentScore += _value;
-                StartCoroutine(FeedbackBonus(_value));
+                StartCoroutine(FeedbackBonusCO(_value));
                 break;
             case "Vagina":
                 currentScore -= _value;
-                StartCoroutine(FeedbackMalus(_value));
+                StartCoroutine(FeedbackMalusCO(_value));
                 break;
             case "Ass":
                 currentScore -= _value;
-                StartCoroutine(FeedbackMalus(_value));
+                StartCoroutine(FeedbackMalusCO(_value));
                 break;
         }
     }
@@ -89,84 +164,75 @@ public class GameManager : MonoBehaviour
         {
             case "Penis":
                 currentScore -= _value;
-                StartCoroutine(FeedbackMalus(_value));
+                StartCoroutine(FeedbackMalusCO(_value));
                 break;
             case "Vagina":
                 currentScore -= _value;
-                StartCoroutine(FeedbackMalus(_value));
+                StartCoroutine(FeedbackMalusCO(_value));
                 break;
             case "Ass":
                 currentScore -= _value;
-                StartCoroutine(FeedbackMalus(_value));
+                StartCoroutine(FeedbackMalusCO(_value));
                 break;
         }
     }
 
-    // Method called by button for restart scene
-    public void Restart()
-    {
-        SceneManager.LoadScene("Circuit 1");
-        Time.timeScale = 1;
-    }
 
-    // Method called to return in main menu
-    public void ReturnToMainMenu()
+    private void Handcuff(int _value, string _name)
     {
-        SceneManager.LoadScene("MainMenu");
-        Time.timeScale = 1;
-    }
-
-    // Increment score based to distance of the player and 
-    //set it to text in 2 panel of Game Over and Finished Level
-    private IEnumerator DistanceScore()
-    {
-        while (Time.timeScale == 1)
+        switch (_name)
         {
-            scoreGO.text = "Your score: " + currentScore.ToString();
-            scoreFL.text = "Your final score: " + currentScore.ToString();
-            yield return new WaitForSecondsRealtime(.1f);
-            currentScore += (int)refMP.transform.position.z * -1;
+            case "Penis":
+                currentScore += _value;
+                StartCoroutine(FeedbackBonusCO(_value));
+                break;
+            case "Vagina":
+                currentScore += _value;
+                StartCoroutine(FeedbackBonusCO(_value));
+                break;
+            case "Ass":
+                currentScore += _value;
+                StartCoroutine(FeedbackBonusCO(_value));
+                break;
         }
     }
 
-    // Show green plus score feedback
-    private IEnumerator FeedbackBonus(float _value)
+    private void Mouth(int _value, string _name)
     {
-        textScorePlayer.gameObject.SetActive(true);
-        textScorePlayer.color = Color.green;
-
-        Vector3 initialPos = textScorePlayer.transform.position;
-
-        while (textScorePlayer.transform.position.y <= 25f)
+        switch (_name)
         {
-            textScorePlayer.transform.position += new Vector3(0f, .5f, 0f);
-            textScorePlayer.text = "+ " + _value.ToString();
-            //textScorePlayer.GetComponent<TextMesh>().color.a += 0.4 * Time.deltaTime; ;
-            yield return null;
+            case "Penis":
+                currentScore += _value;
+                StartCoroutine(FeedbackBonusCO(_value));
+                break;
+            case "Vagina":
+                currentScore += _value;
+                StartCoroutine(FeedbackBonusCO(_value));
+                break;
+            case "Ass":
+                currentScore -= _value;
+                StartCoroutine(FeedbackMalusCO(_value));
+                break;
         }
-
-        textScorePlayer.gameObject.SetActive(false);
-        textScorePlayer.transform.position = initialPos;
     }
 
-    // Show red minus score feedback
-    private IEnumerator FeedbackMalus(float _value)
+    private void Muzzle(int _value, string _name)
     {
-        textScorePlayer.gameObject.SetActive(true);
-        textScorePlayer.color = Color.red;
-
-        Vector3 initialPos = textScorePlayer.transform.position;
-
-        while (textScorePlayer.transform.position.y <= 25f)
+        switch (_name)
         {
-            textScorePlayer.transform.position += new Vector3(0f, .5f, 0f);
-            textScorePlayer.text = "- " + _value.ToString();
-            //textScorePlayer.GetComponent<TextMesh>().color.a += 0.4 * Time.deltaTime; ;
-            yield return null;
+            case "Penis":
+                currentScore -= _value;
+                StartCoroutine(FeedbackMalusCO(_value));
+                break;
+            case "Vagina":
+                currentScore -= _value;
+                StartCoroutine(FeedbackMalusCO(_value));
+                break;
+            case "Ass":
+                currentScore += _value;
+                StartCoroutine(FeedbackBonusCO(_value));
+                break;
         }
-
-        textScorePlayer.gameObject.SetActive(false);
-        textScorePlayer.transform.position = initialPos;
     }
-
+    #endregion
 }
