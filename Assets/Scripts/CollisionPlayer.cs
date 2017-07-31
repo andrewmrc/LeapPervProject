@@ -10,6 +10,8 @@ public class CollisionPlayer : MonoBehaviour
     public Action<int, string> delHandcuff;
     public Action<int, string> delMouth;
     public Action<int, string> delMuzzle;
+    public Action<int, string> delUnderwear;
+    public Action<int, string> delPill;
     public Action<bool> delGameOver;
     public Action<bool> delFinishLevel;
 
@@ -61,6 +63,26 @@ public class CollisionPlayer : MonoBehaviour
             delMuzzle(400, this.gameObject.name);
             Destroy(collision.gameObject);
             Debug.Log("Delegato Muzzle");
+        }
+
+        if (collision.gameObject.name == "Underwear")
+        {
+            delUnderwear(500, this.gameObject.name);
+            Destroy(collision.gameObject);
+            Debug.Log("Delegato Underwear");
+        }
+
+        if (collision.gameObject.name == "Pill")
+        {
+            delPill(900, this.gameObject.name);
+            Destroy(collision.gameObject);
+            Debug.Log("Delegato Pill");
+        }
+
+        if (collision.gameObject.name == "Dick Pig")
+        {
+            delGameOver(true);
+            Debug.Log("Delegato GameOver");
         }
     }
 }

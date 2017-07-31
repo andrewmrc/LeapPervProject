@@ -1,10 +1,11 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Bullet : MonoBehaviour
 {
     public byte speedBullet;
+    public Action<int> delKillPig;
     private void Awake()
     {
         StartCoroutine(DestroyByTimeCO());
@@ -19,7 +20,6 @@ public class Bullet : MonoBehaviour
     {
         yield return new WaitForSeconds(2f);
         Destroy(this.gameObject);
-        print("Distrutto bullet");
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -27,7 +27,13 @@ public class Bullet : MonoBehaviour
         if (collision.gameObject.tag == "Obstacle")
         {
             Destroy(gameObject);
-            print("Distrutto bullet");
+        }
+
+        if (collision.gameObject.name == "Dick Pig")
+        {
+            delKillPig(100);
+            Destroy(collision.gameObject);
+            Destroy(gameObject);
         }
     }
 }

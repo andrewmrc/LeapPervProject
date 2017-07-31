@@ -31,6 +31,8 @@ public class GameManager : MonoBehaviour
         refCP.delHandcuff = Handcuff;
         refCP.delMouth = Mouth;
         refCP.delMuzzle = Muzzle;
+        refCP.delPill = Pill;
+        refCP.delUnderwear = Underwear;
         StartCoroutine(DistanceScore());
     }
 
@@ -60,7 +62,7 @@ public class GameManager : MonoBehaviour
     {
         while (Time.timeScale == 1)
         {
-            currentScore += ((int)refMP.transform.position.z * -1) * (int)refMP.speed;
+            currentScore += ((int)refMP.transform.position.z * -1) * ((int)refMP.speed / 3);
             scoreGO.text = "Your score: " + currentScore.ToString();
             scoreFL.text = "Your final score: " + currentScore.ToString();
             yield return new WaitForSecondsRealtime(.1f);
@@ -68,7 +70,7 @@ public class GameManager : MonoBehaviour
     }
 
     // Show green plus score feedback
-    private IEnumerator FeedbackBonusCO(float _value)
+    public IEnumerator FeedbackBonusCO(float _value)
     {
         textScorePlayer.gameObject.SetActive(true);
         textScorePlayer.color = Color.green;
@@ -88,7 +90,7 @@ public class GameManager : MonoBehaviour
     }
 
     // Show red minus score feedback
-    private IEnumerator FeedbackMalusCO(float _value)
+    public IEnumerator FeedbackMalusCO(float _value)
     {
         textScorePlayer.gameObject.SetActive(true);
         textScorePlayer.color = Color.red;
@@ -234,5 +236,45 @@ public class GameManager : MonoBehaviour
                 break;
         }
     }
+
+    private void Underwear(int _value, string _name)
+    {
+        switch (_name)
+        {
+            case "Penis":
+                currentScore += _value;
+                StartCoroutine(FeedbackBonusCO(_value));
+                break;
+            case "Vagina":
+                currentScore += _value;
+                StartCoroutine(FeedbackBonusCO(_value));
+                break;
+            case "Ass":
+                currentScore += _value;
+                StartCoroutine(FeedbackBonusCO(_value));
+                break;
+        }
+    }
+
+    private void Pill(int _value, string _name)
+    {
+        switch (_name)
+        {
+            case "Penis":
+                currentScore -= _value;
+                StartCoroutine(FeedbackMalusCO(_value));
+                break;
+            case "Vagina":
+                currentScore += _value;
+                StartCoroutine(FeedbackBonusCO(_value));
+                break;
+            case "Ass":
+                currentScore -= _value;
+                StartCoroutine(FeedbackMalusCO(_value));
+                break;
+        }
+    }
+
+    
     #endregion
 }
